@@ -698,6 +698,11 @@ static int load_config_file(DaemonConfig *c) {
                 else if (strcasecmp(p->key, "allow-interfaces") == 0) {
                     char **e, **t;
 
+                    if (strlen(p->value) == 0) {
+                        avahi_log_warning("Empty allow-interfaces setting, treating as default");
+                        continue;
+                    }
+
                     avahi_string_list_free(c->server_config.allow_interfaces);
                     c->server_config.allow_interfaces = NULL;
                     e = avahi_split_csv(p->value);
@@ -708,6 +713,11 @@ static int load_config_file(DaemonConfig *c) {
                     avahi_strfreev(e);
                 } else if (strcasecmp(p->key, "deny-interfaces") == 0) {
                     char **e, **t;
+
+                    if (strlen(p->value) == 0) {
+                        avahi_log_warning("Empty deny-interfaces setting, treating as default");
+                        continue;
+                    }
 
                     avahi_string_list_free(c->server_config.deny_interfaces);
                     c->server_config.deny_interfaces = NULL;
